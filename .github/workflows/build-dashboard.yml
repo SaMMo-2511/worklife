@@ -3,7 +3,7 @@ name: Generate Dashboard
 on:
   schedule:
     # Día 1 de cada mes a las 06:00 UTC
-    - cron: '0 6 1 * *'
+    - cron: '0 6 * * 1'
 
   workflow_dispatch:
 

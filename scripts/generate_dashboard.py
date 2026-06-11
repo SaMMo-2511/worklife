@@ -1,26 +1,48 @@
-import sys
 import json
 import pandas as pd
 import numpy as np
 from datetime import datetime
+from pathlib import Path
 
-excel = sys.argv[1]
+BASE_DIR = Path(__file__).resolve().parent
+excel = BASE_DIR.parent / "data" / "Book.xlsx"
+
+skills = pd.read_excel(excel, sheet_name=0)
+
+excel = r"data/Book.xlsx"
 
 skills = pd.read_excel(excel, sheet_name=0)
 promotions = pd.read_excel(excel, sheet_name="Promotions")
 
-skills['End Date'] = np.where(skills['End Date']=='11/06/2026',datetime.today().strftime('%dd-%mm-%yyyy'),skills['End Date'])
-skills[['Start Date','End Date']] = skills[['Start Date','End Date']].apply(pd.to_datetime)
-skills['Time'] = (skills['End Date']-skills['Start Date']).dt.days/365
+skills['End Date'] = pd.to_datetime(skills['End Date'])
 
-promotions['Termine'] = np.where(promotions['Termine']=='11/06/2026',datetime.today().strftime('%dd-%mm-%yyyy'),skills['End Date'])
-promotions[['Empece','Termine']] = promotions[['Empece','Termine']].apply(pd.to_datetime)
-promotions['Tiempo_puesto'] = (promotions['Termine']-promotions['Empece']).dt.days/30
+mask = skills['End Date'] == pd.Timestamp('2026-06-11')
+
+skills.loc[mask, 'End Date'] = pd.Timestamp.today().normalize()
+
+# skills['End Date'] = np.where(skills['End Date']=='11/06/2026',datetime.today().strftime('%d-%m-%Y'),skills['End Date'])
+skills['Start date '] = pd.to_datetime(skills['Start date '])
+skills['End Date'] = pd.to_datetime(skills['End Date'])
+skills['Time'] = (skills['End Date']-skills['Start date ']).dt.days/365
+
+
+promotions['End Date'] = pd.to_datetime(skills['End Date'])
+
+mask = promotions['End Date'] == pd.Timestamp('2026-06-11')
+
+promotions.loc[mask, 'End Date'] = pd.Timestamp.today().normalize()
+
+# promotions['Termine'] = np.where(promotions['Termine']=='11/06/2026',datetime.today().strftime('%d-%m-%Y'),promotions['End Date'])
+promotions['Empece '] = pd.to_datetime(promotions['Empece '])
+promotions['Termine'] = pd.to_datetime(promotions['Termine'])
+promotions['Tiempo_puesto'] = (promotions['Termine']-promotions['Empece ']).dt.days/30
+
+promotions.rename(columns = {'Tecnico':'Caracter Tecnico'}, inplace = True)
 
 skills["Time"] = pd.to_numeric(skills["Time"], errors="coerce")
 skills = skills.sort_values("Time", ascending=False)
 
-cats = ["Gestion equipos", "Gestion proyectos", "Tecnico"]
+cats = ["Gestion Equipos", "Gestion Proyectos", "Caracter Tecnico"]
 cat_values = {
     c: promotions.loc[promotions[c].fillna(0) > 0, "Tiempo_puesto"].sum()
     for c in cats

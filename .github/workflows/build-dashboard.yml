@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pandas openpyxl
+          pip install pandas openpyxl numpy
 
       - name: Generate dashboard
         run: |

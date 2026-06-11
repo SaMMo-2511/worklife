@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skills Dashboard</title>
+
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+<style>
+body {
+    margin:0;
+    background:#000;
+    color:#fff;
+    font-family:Arial, sans-serif;
+    overflow:hidden;
+}
+.slide {
+    width:100vw;
+    height:100vh;
+    display:none;
+    padding:30px;
+    box-sizing:border-box;
+}
+.slide.active {
+    display:block;
+}
+h1 {
+    text-align:center;
+}
+.chart {
+    width:100%;
+    height:80vh;
+}
+.nav {
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    font-size:40px;
+    cursor:pointer;
+    border:1px solid white;
+    border-radius:50%;
+    width:60px;
+    height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.prev {
+    left:20px;
+    right:auto;
+}
+</style>
+</head>
+<body>
+
+<div id="s1" class="slide active">
+<h1>Cumulative time with skills in years</h1>
+<div id="chart1" class="chart"></div>
+</div>
+
+<div id="s2" class="slide">
+<h1>Promotions Timeline</h1>
+<div id="chart2" class="chart"></div>
+</div>
+
+<div id="s3" class="slide">
+<h1>Experience by Category</h1>
+<div id="chart3" class="chart"></div>
+</div>
+
+<div class="nav prev" onclick="move(-1)">&#8592;</div>
+<div class="nav" onclick="move(1)">&#8594;</div>
+
+<script>
+
+const slides = [...document.querySelectorAll('.slide')];
+let current = 0;
+
+function move(step){
+  slides[current].classList.remove('active');
+  current = (current + step + slides.length) % slides.length;
+  slides[current].classList.add('active');
+}
+
+// Slide 1
+Plotly.newPlot('chart1', [{
+    type:'bar',
+    x:["SQL", "Python", "Qlik sense", "Jira - JQL", "Google Big Query", "Power BI"],
+    y:[4.695890410958904, 4.695890410958904, 3.4438356164383563, 2.673972602739726, 2.0876712328767124, 1.252054794520548]
+}], {
+    paper_bgcolor:'black',
+    plot_bgcolor:'black',
+    font:{color:'white'}
+});
+
+// Slide 2 (waterfall)
+Plotly.newPlot('chart2', [{
+    type:'waterfall',
+    x:["Programador Junior", "Junior Data Scientist", "Center Developer", "Center Senior Developer", "Expert Data Analyst"],
+    y:[1.0, 15.2, 14.166666666666666, 23.866666666666667, 3.8666666666666667]
+}], {
+    paper_bgcolor:'black',
+    plot_bgcolor:'black',
+    font:{color:'white'}
+});
+
+// Slide 3
+Plotly.newPlot('chart3', [{
+    type:'bar',
+    orientation:'h',
+    y:["Gestion Equipos", "Gestion Proyectos", "Caracter Tecnico"],
+    x:[38.03333333333333, 53.233333333333334, 58.1]
+}], {
+    paper_bgcolor:'black',
+    plot_bgcolor:'black',
+    font:{color:'white'}
+});
+
+</script>
+</body>
+</html>

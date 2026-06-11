@@ -1,11 +1,21 @@
 import sys
 import json
 import pandas as pd
+import numpy as np
+from datetime import datetime
 
 excel = sys.argv[1]
 
 skills = pd.read_excel(excel, sheet_name=0)
 promotions = pd.read_excel(excel, sheet_name="Promotions")
+
+skills['End Date'] = np.where(skills['End Date']=='11/06/2026',datetime.today().strftime('%dd-%mm-%yyyy'),skills['End Date'])
+skills[['Start Date','End Date']] = skills[['Start Date','End Date']].apply(pd.to_datetime)
+skills['Time'] = (skills['End Date']-skills['Start Date']).dt.days/365
+
+promotions['Termine'] = np.where(promotions['Termine']=='11/06/2026',datetime.today().strftime('%dd-%mm-%yyyy'),skills['End Date'])
+promotions[['Empece','Termine']] = promotions[['Empece','Termine']].apply(pd.to_datetime)
+promotions['Tiempo_puesto'] = (promotions['Termine']-promotions['Empece']).dt.days/30
 
 skills["Time"] = pd.to_numeric(skills["Time"], errors="coerce")
 skills = skills.sort_values("Time", ascending=False)

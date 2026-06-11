@@ -4,10 +4,8 @@ import numpy as np
 from datetime import datetime
 from pathlib import Path
 
-# BASE_DIR = Path(__file__).resolve().parent
-# excel = BASE_DIR.parent / "data" / "Book.xlsx"
-
-excel = r"C:\Users\Samuel\Desktop\Python\Worklife\data\Book.xlsx"
+BASE_DIR = Path(__file__).resolve().parent
+excel = BASE_DIR.parent / "data" / "Book.xlsx"
 
 skills = pd.read_excel(excel, sheet_name=0)
 promotions = pd.read_excel(excel, sheet_name="Promotions")

@@ -71,8 +71,8 @@ html = f"""
     background: var(--bg);
     color: var(--text);
     font-family: var(--font);
-    overflow: hidden;
-    height: 100vh;
+    overflow-x: hidden;
+    min-height: 100vh;
     width: 100vw;
     background-image: 
         radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.05) 0%, transparent 40%),
@@ -86,7 +86,7 @@ html = f"""
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 40px 60px 140px;
+    padding: 25px 20px 170px;
     opacity: 0;
     pointer-events: none;
     transform: translateY(20px);
@@ -121,8 +121,9 @@ html = f"""
     flex-direction: column;
     align-items: center;
     position: relative;
-    margin-bottom: 80px;
-  }}
+    margin-bottom: 120px;
+    min-height: 350px;
+    }}
 
   .chart {{
     width: 100%;
@@ -146,8 +147,8 @@ html = f"""
 
   .footer-desc {{
     position: absolute;
-    bottom: 95px;
-    width: calc(100% - 120px);
+    bottom: 60px;
+    width: calc(100% - 40px);
     max-width: 1100px;
     background: var(--card-bg);
     border-left: 3px solid var(--accent);
@@ -230,6 +231,59 @@ html = f"""
     color: var(--muted);
     font-family: monospace;
   }}
+  @media (max-width: 768px) {{
+
+  .slide{{
+      padding: 15px 10px 190px;
+  }}
+
+  h1 {{
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+  }}
+
+  .chart-wrap {{
+      min-height: 300px;
+      margin-bottom: 140px;
+  }}
+
+  .footer-desc {{
+      width: calc(100% - 20px);
+      font-size: 0.8rem;
+      padding: 12px;
+      bottom: 55px;
+      line-height: 1.4;
+  }}
+
+  .measure-badge {{
+      font-size: 0.65rem;
+      padding: 4px 8px;
+  }}
+
+  .linkedin-container {{
+      max-height: 60vh;
+      padding: 15px;
+  }}
+
+  .text-slide-body {{
+      font-size: 0.95rem;
+      padding: 20px;
+  }}
+
+  .nav-area {{
+      bottom: 12px;
+  }}
+
+  .nav-btn {{
+      width: 42px;
+      height: 42px;
+  }}
+
+  .slide-counter {{
+      bottom: 15px;
+      right: 15px;
+  }}}}
 </style>
 </head>
 <body>
@@ -254,7 +308,7 @@ html = f"""
 <div id="s3" class="slide">
   <h1>Especialización por Proyectos</h1>
   <div class="chart-wrap">
-    <div id="chart3" class="chart"></div>
+      <div class="measure-badge">Medida: Tiempo en Meses</div> <div id="chart3" class="chart"></div>
   </div>
   <div class="footer-desc">En mi vida laboral he estado en proyectos que permitian la gestion de personas, proyectos donde gestionaba a cliente y proyectos donde el foco era la habilidad técnica.</div>
 </div>
@@ -294,15 +348,24 @@ html = f"""
   <h1>Visión Analítica</h1>
   <div class="chart-wrap">
     <div class="text-slide-body">
-    La historia que acabas de ver resume mi camino como analista de datos y de negocio.
-    En esencia, mi trabajo consiste en eso: convertir datos en información de valor.
+    <p>La historia que acabas de ver resume mi camino como analista de datos y de negocio.
+    En esencia, mi trabajo consiste en eso: convertir datos en información de valor.</p>
+    <br>
+    <p>Crear un análisis basado en LinkedIn ha sido un desafío ideal para mostrar en detalle la metodología que precisa un analista de datos: ¿Cómo medir el talento y la experiencia de forma cuantitativa? ¿Qué datos filtrar para no saturar a la audiencia? Y, sobre todo, ¿cómo mantener el factor humano dentro de la analítica?
+    </p><br>
     
-    Crear un análisis basado en LinkedIn ha sido un desafío ideal para mostrar en detalle la metodología que precisa un analista de datos: ¿Cómo medir el talento y la experiencia de forma cuantitativa? ¿Qué datos filtrar para no saturar a la audiencia? Y, sobre todo, ¿cómo mantener el factor humano dentro de la analítica?
-    
-    Cada una de las pestañas anteriores ha sido diseñada pensando en resolver estas dudas desde la perspectiva más importante: la de usted, el cliente final. 
+    <p>
+        Cada una de las pestañas anteriores ha sido diseñada pensando en resolver estas dudas desde la perspectiva más importante: la de usted, el cliente final. </p>
     </div>
+    <br><br><br>
+    <div class="footer"><i>Powered by PrometheusBird</i></div>
+    <footer>
+        <br>
+  <p>Autor: Samuel Moreno Moya<br>
+  <center><a href="https://www.linkedin.com/in/samuel-moreno-moya-5a0a86210/">LinkedIn</a></center> 
+  </p>
+</footer>
   </div>
-  <div class="footer-desc">Gracias por llegar hasta el final.</div>
 </div>
 
 <div class="nav-area">
@@ -345,7 +408,7 @@ document.addEventListener('keydown', e => {{
   if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')  move(-1);
 }});
 
-// Estilos limpios globales (Sin rejillas de fondo)
+
 const BGCOLOR   = 'rgba(0,0,0,0)';
 const FONTFAM   = "'Inter', sans-serif";
 const ACCENT    = '#00d1ff';
@@ -356,7 +419,7 @@ const baseLayout = {{
   font: {{ color: '#8892b0', family: FONTFAM, size: 11 }},
   margin: {{ t: 30, b: 50, l: 40, r: 50 }},
   xaxis: {{ 
-    showgrid: false,       // <-- QUITA LAS LÍNEAS VERTICALES POR COMPLETO
+    showgrid: false,
     linecolor: 'rgba(255,255,255,0.1)', 
     zeroline: false,
     tickfont: {{ color: '#8892b0', size: 11 }}
@@ -371,7 +434,6 @@ const baseLayout = {{
 
 const cfg = {{ displayModeBar: false, responsive: true }};
 
-// Datos puros de Python
 const xSkills = {json.dumps(skills["Habilidad"].tolist())};
 const ySkills = {json.dumps(skills["Time"].fillna(0).tolist())};
 const xPromo  = {json.dumps(promotions["Puesto"].astype(str).tolist())};
@@ -379,16 +441,16 @@ const yPromo  = {json.dumps(promotions["Tiempo_puesto"].fillna(0).tolist())};
 const yCat    = {json.dumps(list(cat_values.keys()))};
 const xCat    = {json.dumps(list(cat_values.values()))};
 
-// Lógica de cálculo estricta para ejes máximos
+
 const yMaxCalculated1 = Math.max(...ySkills) * 1.30;
 
-// Para el Waterfall (Gráfica 2), el eje correcto debe basarse en la suma total acumulada
+
 const totalWaterfall = yPromo.reduce((a, b) => a + b, 0);
-const yMaxCalculated2 = totalWaterfall * 1.25; 
+const yMaxCalculated2 = totalWaterfall * 1.40; 
 
 const xMaxCalculated3 = Math.max(...xCat) * 1.30;
 
-// Inicialización de Gráfica 1
+// Grafica 1
 Plotly.newPlot('chart1', [{{
   type: 'bar', x: xSkills, y: ySkills.map(() => 0),
   text: ySkills.map(v => v.toFixed(1)),
@@ -409,15 +471,58 @@ function animateChart1() {{
   }}, 720);
 }}
 
-// Inicialización de Gráfica 2 (Eje Waterfall Corregido al Valor Acumulado Completo)
+// Grafica 2
 Plotly.newPlot('chart2', [{{
-  type: 'waterfall', x: xPromo, y: yPromo.map(() => 0),
-  connector: {{ line: {{ color: 'rgba(255,255,255,0.1)' }} }},
-  increasing: {{ marker: {{ color: ACCENT }} }},
-  totals: {{ marker: {{ color: '#7c3aed' }} }}
+  type: 'waterfall',
+
+  x: xPromo,
+  y: yPromo.map(() => 0),
+
+  text: yPromo.map(v => `${{Math.round(v)}}`),
+  textposition: 'outside',
+
+  textfont: {{
+      color: ACCENT,
+      size: 12,
+      family: FONTFAM
+  }},
+
+  cliponaxis: false,
+
+  connector: {{
+      line: {{
+          color: 'rgba(255,255,255,0.1)'
+      }}
+  }},
+
+  increasing: {{
+      marker: {{
+          color: ACCENT
+      }}
+  }},
+
+  totals: {{
+      marker: {{
+          color: '#7c3aed'
+      }}
+  }}
+
 }}], {{
+
   ...baseLayout,
-  yaxis: {{ ...baseLayout.yaxis, range: [0, yMaxCalculated2] }}
+
+  margin: {{
+      t: 80,
+      b: 140,
+      l: 40,
+      r: 50
+  }},
+
+  yaxis: {{
+      ...baseLayout.yaxis,
+      range: [0, yMaxCalculated2]
+  }}
+
 }}, cfg);
 
 function animateChart2() {{
@@ -429,7 +534,7 @@ function animateChart2() {{
   }}, 720);
 }}
 
-// Inicialización de Gráfica 3 (Completamente limpia de cuadrículas)
+//Grafica 3 
 Plotly.newPlot('chart3', [{{
   type: 'bar', orientation: 'h', y: yCat, x: xCat.map(() => 0),
   text: xCat.map(v => v.toFixed(1)),
@@ -447,7 +552,7 @@ Plotly.newPlot('chart3', [{{
   }},
   xaxis: {{ 
     visible: true, 
-    showgrid: false,       // <-- Adiós líneas verticales también en la gráfica 3
+    showgrid: false,       
     linecolor: 'rgba(255,255,255,0.1)', 
     range: [0, xMaxCalculated3] 
   }}
@@ -463,6 +568,12 @@ function animateChart3() {{
 }}
 
 // Carga Inicial
+
+window.addEventListener('resize', () => {{
+    Plotly.Plots.resize('chart1');
+    Plotly.Plots.resize('chart2');
+    Plotly.Plots.resize('chart3');
+}});
 updateNav();
 setTimeout(animateChart1, 500);
 </script>

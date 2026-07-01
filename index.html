@@ -3,7 +3,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Skills Dashboard | Data Analyst</title>
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <style>
@@ -73,14 +73,78 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     position: relative;
     margin-bottom: 120px;
     min-height: 350px;
-    }
+  }
 
   .chart {
     width: 100%;
     height: 100%;
+  }
+
+  /* KPI Grid Styles */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1100px;
+    padding: 0 20px;
+  }
+
+  .kpi-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(0, 209, 255, 0.2);
+    border-radius: 8px;
+    padding: 25px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    animation: slideIn 0.6s ease-out forwards;
+  }
+
+  .kpi-card:nth-child(1) { animation-delay: 0.1s; }
+  .kpi-card:nth-child(2) { animation-delay: 0.2s; }
+  .kpi-card:nth-child(3) { animation-delay: 0.3s; }
+  .kpi-card:nth-child(4) { animation-delay: 0.4s; }
+  .kpi-card:nth-child(5) { animation-delay: 0.5s; }
+  .kpi-card:nth-child(6) { animation-delay: 0.6s; }
+  .kpi-card:nth-child(7) { animation-delay: 0.7s; }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .kpi-value {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 700;
+    color: var(--accent);
+    margin: 10px 0;
+    line-height: 1;
+  }
+
+  .kpi-label {
+    font-size: clamp(0.75rem, 2vw, 0.95rem);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+
+  .kpi-icon {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 8px;
+    opacity: 0.8;
   }
 
   .measure-badge {
@@ -184,64 +248,243 @@
     color: var(--muted);
     font-family: monospace;
   }
-  @media (max-width: 768px) {
 
-  .slide{
-      padding: 15px 10px 190px;
-  }
+  /* Mobile Responsive Improvements */
+  @media (max-width: 1024px) {
+    .slide {
+      padding: 20px 15px 150px;
+    }
 
-  h1 {
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-      margin-bottom: 10px;
-  }
+    .kpi-grid {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      padding: 0 10px;
+    }
 
-  .chart-wrap {
-      min-height: 300px;
-      margin-bottom: 140px;
-  }
-
-  .footer-desc {
-      width: calc(100% - 20px);
-      font-size: 0.8rem;
-      padding: 12px;
-      bottom: 55px;
-      line-height: 1.4;
-  }
-
-  .measure-badge {
-      font-size: 0.65rem;
-      padding: 4px 8px;
-  }
-
-  .linkedin-container {
-      max-height: 60vh;
+    .kpi-card {
       padding: 15px;
+    }
+
+    .chart-wrap {
+      min-height: 300px;
+      margin-bottom: 100px;
+    }
   }
 
-  .text-slide-body {
+  @media (max-width: 768px) {
+    .slide {
+      padding: 15px 10px 180px;
+      justify-content: center;
+    }
+
+    h1 {
       font-size: 0.95rem;
-      padding: 20px;
-  }
+      letter-spacing: 0.06em;
+      margin-bottom: 15px;
+    }
 
-  .nav-area {
+    .kpi-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 0 8px;
+    }
+
+    .kpi-card {
+      padding: 12px;
+      border-radius: 6px;
+    }
+
+    .kpi-value {
+      font-size: 1.4rem;
+    }
+
+    .kpi-label {
+      font-size: 0.65rem;
+    }
+
+    .kpi-icon {
+      font-size: 1.2rem;
+    }
+
+    .chart-wrap {
+      min-height: 250px;
+      margin-bottom: 120px;
+      width: 100%;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+
+    .chart {
+      width: 100%;
+      height: 250px;
+    }
+
+    .footer-desc {
+      width: calc(100% - 20px);
+      font-size: 0.75rem;
+      padding: 10px;
+      bottom: 60px;
+      line-height: 1.3;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .measure-badge {
+      font-size: 0.55rem;
+      padding: 3px 6px;
+      top: 5px;
+      right: 5px;
+    }
+
+    .linkedin-container {
+      max-height: 55vh;
+      padding: 12px;
+      font-size: 0.9rem;
+    }
+
+    .linkedin-container img {
+      width: 40px !important;
+      height: 40px !important;
+    }
+
+    .text-slide-body {
+      font-size: 0.9rem;
+      padding: 15px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    .nav-area {
       bottom: 12px;
-  }
+    }
 
-  .nav-btn {
-      width: 42px;
-      height: 42px;
-  }
+    .nav-btn {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+    }
 
-  .slide-counter {
+    .slide-counter {
       bottom: 15px;
-      right: 15px;
-  }}
+      right: 12px;
+      font-size: 0.7rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .slide {
+      padding: 12px 8px 160px;
+    }
+
+    h1 {
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+
+    .kpi-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 0;
+    }
+
+    .kpi-card {
+      padding: 10px;
+    }
+
+    .kpi-value {
+      font-size: 1.2rem;
+    }
+
+    .kpi-label {
+      font-size: 0.6rem;
+    }
+
+    .chart-wrap {
+      min-height: 220px;
+      margin-bottom: 100px;
+    }
+
+    .chart {
+      height: 220px;
+    }
+
+    .footer-desc {
+      font-size: 0.7rem;
+      padding: 8px;
+      bottom: 55px;
+    }
+
+    .measure-badge {
+      font-size: 0.5rem;
+      padding: 2px 4px;
+    }
+
+    .linkedin-container {
+      max-height: 50vh;
+      padding: 10px;
+    }
+
+    .text-slide-body {
+      font-size: 0.85rem;
+      padding: 12px;
+    }
+
+    .nav-btn {
+      width: 36px;
+      height: 36px;
+      font-size: 16px;
+    }
+  }
 </style>
 </head>
 <body>
 
-<div id="s1" class="slide active">
+<!-- KPI Dashboard Slide -->
+<div id="s0" class="slide active">
+  <h1>Resumen Profesional</h1>
+  <div class="chart-wrap">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon">⏱️</div>
+        <div class="kpi-value">4.7</div>
+        <div class="kpi-label">Años Experiencia</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">🏢</div>
+        <div class="kpi-value">4</div>
+        <div class="kpi-label">Empresas</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">📍</div>
+        <div class="kpi-value">5</div>
+        <div class="kpi-label">Posiciones</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">👍</div>
+        <div class="kpi-value">8</div>
+        <div class="kpi-label">Recomendaciones</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">⭐</div>
+        <div class="kpi-value">12</div>
+        <div class="kpi-label">Skills Endorsados</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">🔗</div>
+        <div class="kpi-value">250</div>
+        <div class="kpi-label">Conexiones</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-value">95%</div>
+        <div class="kpi-label">Perfil Completo</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-desc">Vista rápida de los KPIs clave de tu perfil profesional. Estos datos reflejan tu experiencia, red profesional y presencia en LinkedIn.</div>
+</div>
+
+<div id="s1" class="slide">
   <h1>Dominio Técnico</h1>
   <div class="chart-wrap">
     <div class="measure-badge">Medida: Tiempo en Años</div>
@@ -253,17 +496,21 @@
 <div id="s2" class="slide">
   <h1>Evolución de Carrera</h1>
   <div class="chart-wrap">
-    <div class="measure-badge">Medida: Tiempo en Meses</div> <div id="chart2" class="chart"></div>
+    <div class="measure-badge">Medida: Tiempo en Meses</div>
+    <div id="chart2" class="chart"></div>
   </div>
-  <div class="footer-desc">Cronología de promociones y responsabilidades. Durante mi vida laboral las promociones han sido continuas, frecuentes y en tiempos cortos debido a la confianza de mis responsables en mis habilidades.</div>
+  <div class="footer-desc">Cronología de promociones y responsabilidades. Durante mi vida laboral las promociones han sido continuas, frecuentes y en tiempos cortos debido a la confianza de mis [...]
+  </div>
 </div>
 
 <div id="s3" class="slide">
   <h1>Especialización por Proyectos</h1>
   <div class="chart-wrap">
-      <div class="measure-badge">Medida: Tiempo en Meses</div> <div id="chart3" class="chart"></div>
+    <div class="measure-badge">Medida: Tiempo en Meses</div>
+    <div id="chart3" class="chart"></div>
   </div>
-  <div class="footer-desc">En mi vida laboral he estado en proyectos que permitian la gestion de personas, proyectos donde gestionaba a cliente y proyectos donde el foco era la habilidad técnica.</div>
+  <div class="footer-desc">En mi vida laboral he estado en proyectos que permitian la gestion de personas, proyectos donde gestionaba a cliente y proyectos donde el foco era la habilidad técnica[...]
+  </div>
 </div>
 
 <div id="s-li" class="slide">
@@ -273,21 +520,23 @@
         <ul class="mqxZYhUgxJzWocAgTaRZgscFyxcVymDOeKAOU">
             <li class="artdeco-list__item" style="border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
                 <div style="display:flex; align-items:start;">
-                    <img width="48" height="48" src="https://media.licdn.com/dms/image/v2/C4D03AQGXwPrMzj3--g/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1639737583749?e=1782950400&amp;v=beta&amp;t=QDyAnqvgFIn_-9cfFkFhhT5c7PVBwOjj9588tz_Ds6Q" class="EntityPhoto-circle-3">
+                    <img width="48" height="48" src="https://media.licdn.com/dms/image/v2/C4D03AQGXwPrMzj3--g/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/16397375837[...]
                     <div>
                         <div class="t-bold">Manuel Moreno Martin</div>
                         <div style="font-size:0.85rem; color:#666; margin-bottom: 8px;">Data Scientist at T-Systems Iberia</div>
-                        <p style="font-style:italic;">"Espectacular como compañero y persona. Se puede destacar su brillantez y su gran capacidad en la resolución de problemas, adaptándose a los cambios continuos que pudieran surgir, todo ello, junto con los conocimiento de aspectos técnicos, matemáticos y estadísticos, nos sirvió de gran ayuda a la hora de solventar las adversidades con facilidad.<br><br>Simplemente espectacular, un compañero diez."</p>
+                        <p style="font-style:italic;">"Espectacular como compañero y persona. Se puede destacar su brillantez y su gran capacidad en la resolución de problemas, adaptándose a l[...]
+                        </p>
                     </div>
                 </div>
             </li>
             <li class="artdeco-list__item">
                 <div style="display:flex; align-items:start;">
-                    <img width="48" height="48" src="https://media.licdn.com/dms/image/v2/D4D03AQHBr7WVQWzCDA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1720692941845?e=1782950400&amp;v=beta&amp;t=VVJT1mxFaG8kDpB7FzLKk5qU5saml85G4vOyqjEgVOs" class="EntityPhoto-circle-3">
+                    <img width="48" height="48" src="https://media.licdn.com/dms/image/v2/D4D03AQHBr7WVQWzCDA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/17206929418[...]
                     <div>
                         <div class="t-bold">Pablo Rodríguez Díaz</div>
                         <div style="font-size:0.85rem; color:#666; margin-bottom: 8px;">Data Engineer and Chapter Lead at T-Systems Iberia</div>
-                        <p style="font-style:italic;">"Samuel es un trabajador excepcional. Aprende y se adapta extraordinariamente rápido, es muy resolutivo, y tiene el don de transmitir su conocimiento de forma brillante. Personalmente, me ha conseguido ayudar incluso con tecnologías que no eran su especialidad. Ojalá pueda volver a trabajar con él en un futuro."</p>
+                        <p style="font-style:italic;">"Samuel es un trabajador excepcional. Aprende y se adapta extraordinariamente rápido, es muy resolutivo, y tiene el don de transmitir su con[...]
+                        </p>
                     </div>
                 </div>
             </li>
@@ -304,7 +553,7 @@
     <p>La historia que acabas de ver resume mi camino como analista de datos y de negocio.
     En esencia, mi trabajo consiste en eso: convertir datos en información de valor.</p>
     <br>
-    <p>Crear un análisis basado en LinkedIn ha sido un desafío ideal para mostrar en detalle la metodología que precisa un analista de datos: ¿Cómo medir el talento y la experiencia de forma cuantitativa? ¿Qué datos filtrar para no saturar a la audiencia? Y, sobre todo, ¿cómo mantener el factor humano dentro de la analítica?
+    <p>Crear un análisis basado en LinkedIn ha sido un desafío ideal para mostrar en detalle la metodología que precisa un analista de datos: ¿Cómo medir el talento y la experiencia de forma[...]
     </p><br>
     
     <p>
@@ -325,7 +574,7 @@
   <button class="nav-btn hidden" id="btn-prev" onclick="move(-1)">←</button>
   <button class="nav-btn" id="btn-next" onclick="move(1)">→</button>
 </div>
-<div class="slide-counter" id="counter">1 / 5</div>
+<div class="slide-counter" id="counter">1 / 6</div>
 
 <script>
 const slides = [...document.querySelectorAll('.slide')];
@@ -351,9 +600,9 @@ function move(step) {
   current = next;
   updateNav();
 
-  if (current === 0) animateChart1();
-  if (current === 1) animateChart2();
-  if (current === 2) animateChart3();
+  if (current === 1) animateChart1();
+  if (current === 2) animateChart2();
+  if (current === 3) animateChart3();
 }
 
 document.addEventListener('keydown', e => {
@@ -388,7 +637,7 @@ const baseLayout = {
 const cfg = { displayModeBar: false, responsive: true };
 
 const xSkills = ["SQL", "Python", "Qlik sense", "Jira - JQL", "Google Big Query", "Power BI"];
-const ySkills = [4.745205479452054, 4.745205479452054, 3.493150684931507, 2.673972602739726, 2.0876712328767124, 1.252054794520548];
+const ySkills = [4.750684931506849, 4.750684931506849, 3.4986301369863013, 2.673972602739726, 2.0876712328767124, 1.252054794520548];
 const xPromo  = ["Programador Junior", "Junior Data Scientist", "Center Developer", "Center Senior Developer", "Expert Data Analyst"];
 const yPromo  = [1.0, 15.2, 14.166666666666666, 23.866666666666667, 3.8666666666666667];
 const yCat    = ["Gestion Equipos", "Gestion Proyectos", "Caracter Tecnico"];

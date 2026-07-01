@@ -38,10 +38,10 @@ skills["Time"] = pd.to_numeric(skills["Time"], errors="coerce")
 skills = skills.sort_values("Time", ascending=False)
 
 cats = ["Gestion Equipos", "Gestion Proyectos", "Caracter Tecnico"]
-cat_values = {{
+cat_values = {
     c: promotions.loc[promotions[c].fillna(0) > 0, "Tiempo_puesto"].sum()
     for c in cats
-}}
+}
 
 # Calculate total years of experience
 min_start_date = skills['Start date '].min()
@@ -55,62 +55,62 @@ companies_count = len([c for c in companies_unique if pd.notna(c)])
 recommendations_count = 3  # Solo las recibidas
 
 # KPIs principales
-linkedin_kpis = {{
+linkedin_kpis = {
     'total_experience_years': total_years,
     'companies_count': companies_count if companies_count > 0 else 2,
     'positions_count': len(promotions),
     'recommendations_count': recommendations_count,
     'endorsed_skills': 12,
-}}
+}
 
 # Educación y Certificaciones
 education_data = [
-    {{
+    {
         'title': 'Master en Data Science',
         'institution': 'Universidad Autónoma de Madrid',
         'year': '2018-2020'
-    }},
-    {{
+    },
+    {
         'title': 'Licenciatura en Informática',
         'institution': 'Universidad Complutense de Madrid',
         'year': '2014-2018'
-    }}
+    }
 ]
 
 certifications_data = [
-    {{
+    {
         'title': 'Google Cloud Professional Data Engineer',
         'issuer': 'Google Cloud',
         'year': '2023'
-    }},
-    {{
+    },
+    {
         'title': 'Certified Associate Cloud Engineer',
         'issuer': 'Google Cloud',
         'year': '2022'
-    }},
-    {{
+    },
+    {
         'title': 'AWS Solutions Architect Associate',
         'issuer': 'Amazon Web Services',
         'year': '2021'
-    }}
+    }
 ]
 
 languages_data = [
-    {{
+    {
         'language': 'Español',
         'level': 'Nativo',
         'proficiency': 100
-    }},
-    {{
+    },
+    {
         'language': 'Inglés',
         'level': 'Avanzado (C1)',
         'proficiency': 85
-    }},
-    {{
+    },
+    {
         'language': 'Francés',
         'level': 'Intermedio (B1)',
         'proficiency': 60
-    }}
+    }
 ]
 
 html = f"""

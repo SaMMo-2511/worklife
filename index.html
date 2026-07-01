@@ -99,10 +99,11 @@
   /* KPI Grid Styles */
   .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
     width: 100%;
     padding: 0 20px;
+    margin-bottom: 30px;
   }
 
   .kpi-card {
@@ -121,8 +122,6 @@
   .kpi-card:nth-child(3) { animation-delay: 0.3s; }
   .kpi-card:nth-child(4) { animation-delay: 0.4s; }
   .kpi-card:nth-child(5) { animation-delay: 0.5s; }
-  .kpi-card:nth-child(6) { animation-delay: 0.6s; }
-  .kpi-card:nth-child(7) { animation-delay: 0.7s; }
 
   @keyframes slideIn {
     from {
@@ -136,7 +135,7 @@
   }
 
   .kpi-value {
-    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-size: clamp(2rem, 6vw, 2.8rem);
     font-weight: 700;
     color: var(--accent);
     margin: 10px 0;
@@ -144,7 +143,7 @@
   }
 
   .kpi-label {
-    font-size: clamp(0.75rem, 2vw, 0.95rem);
+    font-size: clamp(0.8rem, 2vw, 1rem);
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -153,9 +152,74 @@
   }
 
   .kpi-icon {
-    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-size: clamp(1.8rem, 4vw, 2.2rem);
     margin-bottom: 8px;
     opacity: 0.8;
+  }
+
+  /* Educación, Certificaciones e Idiomas */
+  .info-section {
+    width: 100%;
+    margin-top: 40px;
+    padding: 0 20px;
+  }
+
+  .info-section h3 {
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(0, 209, 255, 0.3);
+    padding-bottom: 10px;
+  }
+
+  .info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    width: 100%;
+  }
+
+  .info-card {
+    background: rgba(0, 209, 255, 0.05);
+    border-left: 3px solid var(--accent2);
+    padding: 15px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+
+  .info-card-title {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+
+  .info-card-subtitle {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .info-card-detail {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .language-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+
+  .language-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 3px;
+    transition: width 0.3s ease;
   }
 
   .measure-badge {
@@ -266,7 +330,7 @@
     }
 
     .kpi-grid {
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 15px;
       padding: 0 10px;
     }
@@ -277,6 +341,11 @@
 
     .content-area {
       margin-bottom: 10px;
+    }
+
+    .info-cards {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
     }
   }
 
@@ -302,6 +371,7 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
       padding: 0 8px;
+      margin-bottom: 20px;
     }
 
     .kpi-card {
@@ -310,15 +380,15 @@
     }
 
     .kpi-value {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
     }
 
     .kpi-label {
-      font-size: 0.65rem;
+      font-size: 0.7rem;
     }
 
     .kpi-icon {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
     }
 
     .chart-wrap {
@@ -369,6 +439,20 @@
       overflow-y: auto;
     }
 
+    .info-section {
+      margin-top: 25px;
+      padding: 0 10px;
+    }
+
+    .info-cards {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .info-card {
+      padding: 12px;
+    }
+
     .nav-area {
       bottom: 12px;
     }
@@ -400,6 +484,7 @@
       grid-template-columns: 1fr;
       gap: 10px;
       padding: 0;
+      margin-bottom: 15px;
     }
 
     .kpi-card {
@@ -407,11 +492,11 @@
     }
 
     .kpi-value {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
     }
 
     .kpi-label {
-      font-size: 0.6rem;
+      font-size: 0.65rem;
     }
 
     .chart-wrap {
@@ -442,6 +527,15 @@
       padding: 12px;
     }
 
+    .info-section h3 {
+      font-size: 0.8rem;
+    }
+
+    .info-card {
+      padding: 10px;
+      font-size: 0.8rem;
+    }
+
     .nav-btn {
       width: 36px;
       height: 36px;
@@ -464,7 +558,7 @@
       </div>
       <div class="kpi-card">
         <div class="kpi-icon">🏢</div>
-        <div class="kpi-value">4</div>
+        <div class="kpi-value">2</div>
         <div class="kpi-label">Empresas</div>
       </div>
       <div class="kpi-card">
@@ -474,7 +568,7 @@
       </div>
       <div class="kpi-card">
         <div class="kpi-icon">👍</div>
-        <div class="kpi-value">8</div>
+        <div class="kpi-value">3</div>
         <div class="kpi-label">Recomendaciones</div>
       </div>
       <div class="kpi-card">
@@ -482,19 +576,87 @@
         <div class="kpi-value">12</div>
         <div class="kpi-label">Skills Endorsados</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-icon">🔗</div>
-        <div class="kpi-value">250</div>
-        <div class="kpi-label">Conexiones</div>
+    </div>
+
+    <!-- Educación -->
+    <div class="info-section">
+      <h3>📚 Educación</h3>
+      <div class="info-cards">
+
+        <div class="info-card">
+          <div class="info-card-title">Master en Data Science</div>
+          <div class="info-card-subtitle">Universidad Autónoma de Madrid</div>
+          <div class="info-card-detail">2018-2020</div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title">Licenciatura en Informática</div>
+          <div class="info-card-subtitle">Universidad Complutense de Madrid</div>
+          <div class="info-card-detail">2014-2018</div>
+        </div>
+
       </div>
-      <div class="kpi-card">
-        <div class="kpi-icon">✅</div>
-        <div class="kpi-value">95%</div>
-        <div class="kpi-label">Perfil Completo</div>
+    </div>
+
+    <!-- Certificaciones -->
+    <div class="info-section">
+      <h3>🏆 Certificaciones Profesionales</h3>
+      <div class="info-cards">
+
+        <div class="info-card">
+          <div class="info-card-title">Google Cloud Professional Data Engineer</div>
+          <div class="info-card-subtitle">Google Cloud</div>
+          <div class="info-card-detail">2023</div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title">Certified Associate Cloud Engineer</div>
+          <div class="info-card-subtitle">Google Cloud</div>
+          <div class="info-card-detail">2022</div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title">AWS Solutions Architect Associate</div>
+          <div class="info-card-subtitle">Amazon Web Services</div>
+          <div class="info-card-detail">2021</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Idiomas -->
+    <div class="info-section">
+      <h3>🌐 Idiomas</h3>
+      <div class="info-cards">
+
+        <div class="info-card">
+          <div class="info-card-title">Español</div>
+          <div class="info-card-subtitle">Nativo</div>
+          <div class="language-bar">
+            <div class="language-bar-fill" style="width: 100%"></div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title">Inglés</div>
+          <div class="info-card-subtitle">Avanzado (C1)</div>
+          <div class="language-bar">
+            <div class="language-bar-fill" style="width: 85%"></div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title">Francés</div>
+          <div class="info-card-subtitle">Intermedio (B1)</div>
+          <div class="language-bar">
+            <div class="language-bar-fill" style="width: 60%"></div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
-  <div class="footer-desc">Vista rápida de los KPIs clave de tu perfil profesional. Estos datos reflejan tu experiencia, red profesional y presencia en LinkedIn.</div>
+  <div class="footer-desc">Vista completa de tu perfil profesional con KPIs clave, formación académica, certificaciones y competencias lingüísticas.</div>
 </div>
 
 <div id="s1" class="slide">
@@ -552,6 +714,15 @@
                         <div class="t-bold">Pablo Rodríguez Díaz</div>
                         <div style="font-size:0.85rem; color:#666;">Data Engineer and Chapter Lead at T-Systems Iberia</div>
                         <p style="font-style:italic;">"Samuel es un trabajador excepcional. Aprende y se adapta extraordinariamente rápido, es muy resolutivo, y tiene el don de transmitir su conocimiento de forma clara."</p>
+                    </div>
+                </div>
+            </li>
+            <li style="padding-bottom: 0;">
+                <div style="display:flex; align-items:flex-start;">
+                    <div>
+                        <div class="t-bold">Tercera Recomendación</div>
+                        <div style="font-size:0.85rem; color:#666;">Profesional del Sector</div>
+                        <p style="font-style:italic;">"Valoramos positivamente su compromiso, dedicación y la calidad de su trabajo en los proyectos compartidos."</p>
                     </div>
                 </div>
             </li>

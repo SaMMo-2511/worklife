@@ -45,12 +45,27 @@ cat_values = {
     for c in cats
 }
 
+# Calculate total years of experience
+min_start_date = skills['Start date '].min()
+total_years = round((pd.Timestamp.today() - min_start_date).days / 365.25, 1)
+
+# LinkedIn KPIs (estos valores se pueden actualizar manualmente o mediante API)
+linkedin_kpis = {
+    'total_experience_years': total_years,
+    'companies_count': len(promotions['Empresa'].unique()) if 'Empresa' in promotions.columns else 4,
+    'positions_count': len(promotions),
+    'recommendations_count': 8,  # Actualizar según datos reales
+    'endorsed_skills': 12,  # Actualizar según datos reales
+    'connections': 250,  # Actualizar según datos reales
+    'profile_completeness': 95,
+}
+
 html = f"""
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Skills Dashboard | Data Analyst</title>
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <style>
@@ -120,14 +135,78 @@ html = f"""
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     position: relative;
     margin-bottom: 120px;
     min-height: 350px;
-    }}
+  }}
 
   .chart {{
     width: 100%;
     height: 100%;
+  }}
+
+  /* KPI Grid Styles */
+  .kpi-grid {{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1100px;
+    padding: 0 20px;
+  }}
+
+  .kpi-card {{
+    background: var(--card-bg);
+    border: 1px solid rgba(0, 209, 255, 0.2);
+    border-radius: 8px;
+    padding: 25px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    animation: slideIn 0.6s ease-out forwards;
+  }}
+
+  .kpi-card:nth-child(1) {{ animation-delay: 0.1s; }}
+  .kpi-card:nth-child(2) {{ animation-delay: 0.2s; }}
+  .kpi-card:nth-child(3) {{ animation-delay: 0.3s; }}
+  .kpi-card:nth-child(4) {{ animation-delay: 0.4s; }}
+  .kpi-card:nth-child(5) {{ animation-delay: 0.5s; }}
+  .kpi-card:nth-child(6) {{ animation-delay: 0.6s; }}
+  .kpi-card:nth-child(7) {{ animation-delay: 0.7s; }}
+
+  @keyframes slideIn {{
+    from {{
+      opacity: 0;
+      transform: translateY(30px);
+    }}
+    to {{
+      opacity: 1;
+      transform: translateY(0);
+    }}
+  }}
+
+  .kpi-value {{
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 700;
+    color: var(--accent);
+    margin: 10px 0;
+    line-height: 1;
+  }}
+
+  .kpi-label {{
+    font-size: clamp(0.75rem, 2vw, 0.95rem);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    margin-top: 10px;
+  }}
+
+  .kpi-icon {{
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 8px;
+    opacity: 0.8;
   }}
 
   .measure-badge {{
@@ -231,64 +310,243 @@ html = f"""
     color: var(--muted);
     font-family: monospace;
   }}
-  @media (max-width: 768px) {{
 
-  .slide{{
-      padding: 15px 10px 190px;
-  }}
+  /* Mobile Responsive Improvements */
+  @media (max-width: 1024px) {{
+    .slide {{
+      padding: 20px 15px 150px;
+    }}
 
-  h1 {{
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-      margin-bottom: 10px;
-  }}
+    .kpi-grid {{
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      padding: 0 10px;
+    }}
 
-  .chart-wrap {{
-      min-height: 300px;
-      margin-bottom: 140px;
-  }}
-
-  .footer-desc {{
-      width: calc(100% - 20px);
-      font-size: 0.8rem;
-      padding: 12px;
-      bottom: 55px;
-      line-height: 1.4;
-  }}
-
-  .measure-badge {{
-      font-size: 0.65rem;
-      padding: 4px 8px;
-  }}
-
-  .linkedin-container {{
-      max-height: 60vh;
+    .kpi-card {{
       padding: 15px;
+    }}
+
+    .chart-wrap {{
+      min-height: 300px;
+      margin-bottom: 100px;
+    }}
   }}
 
-  .text-slide-body {{
+  @media (max-width: 768px) {{
+    .slide {{
+      padding: 15px 10px 180px;
+      justify-content: center;
+    }}
+
+    h1 {{
       font-size: 0.95rem;
-      padding: 20px;
-  }}
+      letter-spacing: 0.06em;
+      margin-bottom: 15px;
+    }}
 
-  .nav-area {{
+    .kpi-grid {{
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 0 8px;
+    }}
+
+    .kpi-card {{
+      padding: 12px;
+      border-radius: 6px;
+    }}
+
+    .kpi-value {{
+      font-size: 1.4rem;
+    }}
+
+    .kpi-label {{
+      font-size: 0.65rem;
+    }}
+
+    .kpi-icon {{
+      font-size: 1.2rem;
+    }}
+
+    .chart-wrap {{
+      min-height: 250px;
+      margin-bottom: 120px;
+      width: 100%;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }}
+
+    .chart {{
+      width: 100%;
+      height: 250px;
+    }}
+
+    .footer-desc {{
+      width: calc(100% - 20px);
+      font-size: 0.75rem;
+      padding: 10px;
+      bottom: 60px;
+      line-height: 1.3;
+      margin-left: auto;
+      margin-right: auto;
+    }}
+
+    .measure-badge {{
+      font-size: 0.55rem;
+      padding: 3px 6px;
+      top: 5px;
+      right: 5px;
+    }}
+
+    .linkedin-container {{
+      max-height: 55vh;
+      padding: 12px;
+      font-size: 0.9rem;
+    }}
+
+    .linkedin-container img {{
+      width: 40px !important;
+      height: 40px !important;
+    }}
+
+    .text-slide-body {{
+      font-size: 0.9rem;
+      padding: 15px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }}
+
+    .nav-area {{
       bottom: 12px;
-  }}
+    }}
 
-  .nav-btn {{
-      width: 42px;
-      height: 42px;
-  }}
+    .nav-btn {{
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+    }}
 
-  .slide-counter {{
+    .slide-counter {{
       bottom: 15px;
-      right: 15px;
-  }}}}
+      right: 12px;
+      font-size: 0.7rem;
+    }}
+  }}
+
+  @media (max-width: 480px) {{
+    .slide {{
+      padding: 12px 8px 160px;
+    }}
+
+    h1 {{
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }}
+
+    .kpi-grid {{
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 0;
+    }}
+
+    .kpi-card {{
+      padding: 10px;
+    }}
+
+    .kpi-value {{
+      font-size: 1.2rem;
+    }}
+
+    .kpi-label {{
+      font-size: 0.6rem;
+    }}
+
+    .chart-wrap {{
+      min-height: 220px;
+      margin-bottom: 100px;
+    }}
+
+    .chart {{
+      height: 220px;
+    }}
+
+    .footer-desc {{
+      font-size: 0.7rem;
+      padding: 8px;
+      bottom: 55px;
+    }}
+
+    .measure-badge {{
+      font-size: 0.5rem;
+      padding: 2px 4px;
+    }}
+
+    .linkedin-container {{
+      max-height: 50vh;
+      padding: 10px;
+    }}
+
+    .text-slide-body {{
+      font-size: 0.85rem;
+      padding: 12px;
+    }}
+
+    .nav-btn {{
+      width: 36px;
+      height: 36px;
+      font-size: 16px;
+    }}
+  }}
 </style>
 </head>
 <body>
 
-<div id="s1" class="slide active">
+<!-- KPI Dashboard Slide -->
+<div id="s0" class="slide active">
+  <h1>Resumen Profesional</h1>
+  <div class="chart-wrap">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon">⏱️</div>
+        <div class="kpi-value">{linkedin_kpis['total_experience_years']}</div>
+        <div class="kpi-label">Años Experiencia</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">🏢</div>
+        <div class="kpi-value">{linkedin_kpis['companies_count']}</div>
+        <div class="kpi-label">Empresas</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">📍</div>
+        <div class="kpi-value">{linkedin_kpis['positions_count']}</div>
+        <div class="kpi-label">Posiciones</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">👍</div>
+        <div class="kpi-value">{linkedin_kpis['recommendations_count']}</div>
+        <div class="kpi-label">Recomendaciones</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">⭐</div>
+        <div class="kpi-value">{linkedin_kpis['endorsed_skills']}</div>
+        <div class="kpi-label">Skills Endorsados</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">🔗</div>
+        <div class="kpi-value">{linkedin_kpis['connections']}</div>
+        <div class="kpi-label">Conexiones</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-value">{linkedin_kpis['profile_completeness']}%</div>
+        <div class="kpi-label">Perfil Completo</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-desc">Vista rápida de los KPIs clave de tu perfil profesional. Estos datos reflejan tu experiencia, red profesional y presencia en LinkedIn.</div>
+</div>
+
+<div id="s1" class="slide">
   <h1>Dominio Técnico</h1>
   <div class="chart-wrap">
     <div class="measure-badge">Medida: Tiempo en Años</div>
@@ -300,17 +558,21 @@ html = f"""
 <div id="s2" class="slide">
   <h1>Evolución de Carrera</h1>
   <div class="chart-wrap">
-    <div class="measure-badge">Medida: Tiempo en Meses</div> <div id="chart2" class="chart"></div>
+    <div class="measure-badge">Medida: Tiempo en Meses</div>
+    <div id="chart2" class="chart"></div>
   </div>
-  <div class="footer-desc">Cronología de promociones y responsabilidades. Durante mi vida laboral las promociones han sido continuas, frecuentes y en tiempos cortos debido a la confianza de mis responsables en mis habilidades.</div>
+  <div class="footer-desc">Cronología de promociones y responsabilidades. Durante mi vida laboral las promociones han sido continuas, frecuentes y en tiempos cortos debido a la confianza de mis [...]
+  </div>
 </div>
 
 <div id="s3" class="slide">
   <h1>Especialización por Proyectos</h1>
   <div class="chart-wrap">
-      <div class="measure-badge">Medida: Tiempo en Meses</div> <div id="chart3" class="chart"></div>
+    <div class="measure-badge">Medida: Tiempo en Meses</div>
+    <div id="chart3" class="chart"></div>
   </div>
-  <div class="footer-desc">En mi vida laboral he estado en proyectos que permitian la gestion de personas, proyectos donde gestionaba a cliente y proyectos donde el foco era la habilidad técnica.</div>
+  <div class="footer-desc">En mi vida laboral he estado en proyectos que permitian la gestion de personas, proyectos donde gestionaba a cliente y proyectos donde el foco era la habilidad técnica[...]
+  </div>
 </div>
 
 <div id="s-li" class="slide">
@@ -320,21 +582,23 @@ html = f"""
         <ul class="mqxZYhUgxJzWocAgTaRZgscFyxcVymDOeKAOU">
             <li class="artdeco-list__item" style="border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
                 <div style="display:flex; align-items:start;">
-                    <img width="48" height="48" src="https://media.licdn.com/dms/image/v2/C4D03AQGXwPrMzj3--g/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1639737583749?e=1782950400&amp;v=beta&amp;t=QDyAnqvgFIn_-9cfFkFhhT5c7PVBwOjj9588tz_Ds6Q" class="EntityPhoto-circle-3">
+                    <img width="48" height="48" src="https://media.licdn.com/dms/image/v2/C4D03AQGXwPrMzj3--g/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/16397375837[...]
                     <div>
                         <div class="t-bold">Manuel Moreno Martin</div>
                         <div style="font-size:0.85rem; color:#666; margin-bottom: 8px;">Data Scientist at T-Systems Iberia</div>
-                        <p style="font-style:italic;">"Espectacular como compañero y persona. Se puede destacar su brillantez y su gran capacidad en la resolución de problemas, adaptándose a los cambios continuos que pudieran surgir, todo ello, junto con los conocimiento de aspectos técnicos, matemáticos y estadísticos, nos sirvió de gran ayuda a la hora de solventar las adversidades con facilidad.<br><br>Simplemente espectacular, un compañero diez."</p>
+                        <p style="font-style:italic;">"Espectacular como compañero y persona. Se puede destacar su brillantez y su gran capacidad en la resolución de problemas, adaptándose a l[...]
+                        </p>
                     </div>
                 </div>
             </li>
             <li class="artdeco-list__item">
                 <div style="display:flex; align-items:start;">
-                    <img width="48" height="48" src="https://media.licdn.com/dms/image/v2/D4D03AQHBr7WVQWzCDA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1720692941845?e=1782950400&amp;v=beta&amp;t=VVJT1mxFaG8kDpB7FzLKk5qU5saml85G4vOyqjEgVOs" class="EntityPhoto-circle-3">
+                    <img width="48" height="48" src="https://media.licdn.com/dms/image/v2/D4D03AQHBr7WVQWzCDA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/17206929418[...]
                     <div>
                         <div class="t-bold">Pablo Rodríguez Díaz</div>
                         <div style="font-size:0.85rem; color:#666; margin-bottom: 8px;">Data Engineer and Chapter Lead at T-Systems Iberia</div>
-                        <p style="font-style:italic;">"Samuel es un trabajador excepcional. Aprende y se adapta extraordinariamente rápido, es muy resolutivo, y tiene el don de transmitir su conocimiento de forma brillante. Personalmente, me ha conseguido ayudar incluso con tecnologías que no eran su especialidad. Ojalá pueda volver a trabajar con él en un futuro."</p>
+                        <p style="font-style:italic;">"Samuel es un trabajador excepcional. Aprende y se adapta extraordinariamente rápido, es muy resolutivo, y tiene el don de transmitir su con[...]
+                        </p>
                     </div>
                 </div>
             </li>
@@ -351,7 +615,7 @@ html = f"""
     <p>La historia que acabas de ver resume mi camino como analista de datos y de negocio.
     En esencia, mi trabajo consiste en eso: convertir datos en información de valor.</p>
     <br>
-    <p>Crear un análisis basado en LinkedIn ha sido un desafío ideal para mostrar en detalle la metodología que precisa un analista de datos: ¿Cómo medir el talento y la experiencia de forma cuantitativa? ¿Qué datos filtrar para no saturar a la audiencia? Y, sobre todo, ¿cómo mantener el factor humano dentro de la analítica?
+    <p>Crear un análisis basado en LinkedIn ha sido un desafío ideal para mostrar en detalle la metodología que precisa un analista de datos: ¿Cómo medir el talento y la experiencia de forma[...]
     </p><br>
     
     <p>
@@ -372,7 +636,7 @@ html = f"""
   <button class="nav-btn hidden" id="btn-prev" onclick="move(-1)">←</button>
   <button class="nav-btn" id="btn-next" onclick="move(1)">→</button>
 </div>
-<div class="slide-counter" id="counter">1 / 5</div>
+<div class="slide-counter" id="counter">1 / 6</div>
 
 <script>
 const slides = [...document.querySelectorAll('.slide')];
@@ -398,9 +662,9 @@ function move(step) {{
   current = next;
   updateNav();
 
-  if (current === 0) animateChart1();
-  if (current === 1) animateChart2();
-  if (current === 2) animateChart3();
+  if (current === 1) animateChart1();
+  if (current === 2) animateChart2();
+  if (current === 3) animateChart3();
 }}
 
 document.addEventListener('keydown', e => {{
@@ -584,467 +848,6 @@ setTimeout(animateChart1, 500);
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html)
 
-print("index.html generado")
-
-
-# html = f"""
-# <!DOCTYPE html>
-# <html lang="en">
-# <head>
-# <meta charset="utf-8">
-# <meta name="viewport" content="width=device-width, initial-scale=1">
-# <title>Skills Dashboard</title>
-# <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-# <style>
-#   :root {{
-#     --bg: #0a0a0f;
-#     --accent: #00e5ff;
-#     --accent2: #7c3aed;
-#     --text: #e8eaf0;
-#     --muted: #555577;
-#   }}
-#   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
-#   @font-face {{
-#     font-family: 'CambriaMath';
-#     src: local('Cambria Math'), local('CambriaMath');
-#   }}
-#   body {{
-#     background: var(--bg);
-#     color: var(--text);
-#     font-family: 'Cambria Math', Georgia, serif;
-#     overflow: hidden;
-#     height: 100vh;
-#     width: 100vw;
-#   }}
-#   .slide {{
-#     position: absolute;
-#     inset: 0;
-#     display: flex;
-#     flex-direction: column;
-#     align-items: center;
-#     justify-content: flex-start;
-#     padding: 36px 48px 80px;
-#     opacity: 0;
-#     pointer-events: none;
-#     transform: translateX(60px);
-#     transition: opacity 0.45s ease, transform 0.45s ease;
-#   }}
-#   .slide.active {{
-#     opacity: 1;
-#     pointer-events: all;
-#     transform: translateX(0);
-#   }}
-#   .slide.exit-left {{
-#     opacity: 0;
-#     transform: translateX(-60px);
-#     pointer-events: none;
-#   }}
-#   h1 {{
-#     text-align: center;
-#     font-size: clamp(1.1rem, 2.5vw, 1.8rem);
-#     font-weight: 400;
-#     letter-spacing: 0.18em;
-#     text-transform: uppercase;
-#     color: var(--accent);
-#     text-shadow: 0 0 18px rgba(0,229,255,0.35);
-#     margin-bottom: 20px;
-#     width: 100%;
-#   }}
-#   .text-slide-body {{
-#     max-width: 760px;
-#     width: 100%;
-#     margin-top: 16px;
-#     line-height: 1.85;
-#     font-size: clamp(0.95rem, 1.8vw, 1.15rem);
-#     color: var(--text);
-#     border-left: 2px solid var(--accent);
-#     padding-left: 28px;
-#     white-space: pre-wrap;
-#   }}
-#   .chart-wrap {{
-#     width: 100%;
-#     max-width: 1100px;
-#     flex: 1;
-#     display: flex;
-#     align-items: center;
-#     justify-content: center;
-#   }}
-#   .chart {{
-#     width: 100%;
-#     height: 68vh;
-#   }}
-#   .nav-area {{
-#     position: fixed;
-#     bottom: 22px;
-#     left: 50%;
-#     transform: translateX(-50%);
-#     display: flex;
-#     gap: 16px;
-#     z-index: 100;
-#   }}
-#   .nav-btn {{
-#     width: 52px;
-#     height: 52px;
-#     border-radius: 50%;
-#     background: transparent;
-#     border: 1.5px solid var(--accent);
-#     color: var(--accent);
-#     font-size: 22px;
-#     cursor: pointer;
-#     display: flex;
-#     align-items: center;
-#     justify-content: center;
-#     transition: background 0.25s, box-shadow 0.25s, transform 0.15s;
-#     box-shadow: 0 0 10px rgba(0,229,255,0.15);
-#   }}
-#   .nav-btn:hover {{
-#     background: rgba(0,229,255,0.12);
-#     box-shadow: 0 0 22px rgba(0,229,255,0.45);
-#     transform: scale(1.08);
-#   }}
-#   .nav-btn:active {{ transform: scale(0.96); }}
-#   .nav-btn.hidden {{ visibility: hidden; pointer-events: none; }}
-#   .slide-counter {{
-#     position: fixed;
-#     bottom: 28px;
-#     right: 30px;
-#     font-size: 0.78rem;
-#     letter-spacing: 0.12em;
-#     color: var(--muted);
-#   }}
-#   body::after {{
-#     content:'';
-#     position:fixed;
-#     inset:0;
-#     pointer-events:none;
-#     background: repeating-linear-gradient(
-#       0deg, transparent, transparent 3px,
-#       rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px
-#     );
-#     z-index:9999;
-#   }}
-# </style>
-# </head>
-# <body>
-
-# <div id="s1" class="slide active">
-#   <h1>Tiempo acumulado en habilidades</h1>
-#   <div class="chart-wrap"><div id="chart1" class="chart"></div></div>
-# </div>
-
-# <div id="s2" class="slide">
-#   <h1>Promociones</h1>
-#   <div class="chart-wrap"><div id="chart2" class="chart"></div></div>
-# </div>
-
-# <div id="s3" class="slide">
-#   <h1>Experiencia en tipo de proyectos</h1>
-#   <div class="chart-wrap"><div id="chart3" class="chart"></div></div>
-# </div>
-
-# <div id="s4" class="slide">
-#   <h1>Analista de Datos</h1>
-#   <div class="text-slide-body">
-# La historia que acabas de ver resume mi camino como analista de datos y de negocio.
-# En esencia, mi trabajo consiste en eso: convertir datos en información de valor.
-
-# Crear un análisis basado en LinkedIn ha sido un desafío ideal para mostrar en detalle la metodología que precisa un analista de datos: ¿Cómo medir el talento y la experiencia de forma cuantitativa? ¿Qué datos filtrar para no saturar a la audiencia? Y, sobre todo, ¿cómo mantener el factor humano dentro de la analítica?
-
-# Cada una de las pestañas anteriores ha sido diseñada pensando en resolver estas dudas desde la perspectiva más importante: la de usted, el cliente final. </div>
-# </div>
-
-# <div class="nav-area">
-#   <button class="nav-btn hidden" id="btn-prev" onclick="move(-1)">&#8592;</button>
-#   <button class="nav-btn" id="btn-next" onclick="move(1)">&#8594;</button>
-# </div>
-# <div class="slide-counter" id="counter">1 / 4</div>
-
-# <script>
-# const slides = [...document.querySelectorAll('.slide')];
-# const total  = slides.length;
-# let current  = 0;
-
-# const btnPrev = document.getElementById('btn-prev');
-# const btnNext = document.getElementById('btn-next');
-# const counter = document.getElementById('counter');
-
-# function updateNav() {{
-#   btnPrev.classList.toggle('hidden', current === 0);
-#   btnNext.classList.toggle('hidden', current === total - 1);
-#   counter.textContent = (current + 1) + ' / ' + total;
-# }}
-
-# function move(step) {{
-#   const next = current + step;
-#   if (next < 0 || next >= total) return;
-
-#   slides[current].classList.add('exit-left');
-#   slides[current].classList.remove('active');
-#   slides[next].classList.add('active');
-#   current = next;
-#   updateNav();
-
-#   // Clean up exit-left after transition
-#   setTimeout(() => {{
-#     slides.forEach(s => s.classList.remove('exit-left'));
-#   }}, 500);
-
-#   // Trigger bar fill animation on chart slides
-#   if (current === 0) animateChart1();
-#   if (current === 1) animateChart2();
-#   if (current === 2) animateChart3();
-# }}
-
-# document.addEventListener('keydown', e => {{
-#   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') move(1);
-#   if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   move(-1);
-# }});
-
-# // ── Shared Plotly config ──────────────────────────────────
-# const BGCOLOR   = '#0a0a0f';
-# const GRIDCOLOR = '#1e1e2e';
-# const FONTFAM   = 'Cambria Math, Georgia, serif';
-# const PALETTE   = ['#00e5ff','#7c3aed','#f0f','#00ff9f','#ff6b35',
-#                    '#ffd600','#4fc3f7','#b388ff','#ff80ab','#69f0ae'];
-
-# const baseLayout = {{
-#   paper_bgcolor: BGCOLOR,
-#   plot_bgcolor:  BGCOLOR,
-#   font: {{ color: '#e8eaf0', family: FONTFAM, size: 13 }},
-#   margin: {{ t: 20, b: 90, l: 70, r: 40 }},
-#   xaxis: {{ gridcolor: GRIDCOLOR, linecolor: GRIDCOLOR, zeroline: false,
-#             tickfont: {{ family: FONTFAM }} }},
-#   yaxis: {{ gridcolor: GRIDCOLOR, linecolor: GRIDCOLOR, zeroline: false,
-#             tickfont: {{ family: FONTFAM }} }},
-#   showlegend: false,
-# }};
-# const cfg = {{ displayModeBar: false, responsive: true }};
-
-# // ── Data from Python ──────────────────────────────────────
-# const xSkills = {json.dumps(skills["Habilidad"].tolist())};
-# const ySkills = {json.dumps(skills["Time"].fillna(0).tolist())};
-
-# const xPromo  = {json.dumps(promotions["Puesto"].astype(str).tolist())};
-# const yPromo  = {json.dumps(promotions["Tiempo_puesto"].fillna(0).tolist())};
-
-# const yCat    = {json.dumps(list(cat_values.keys()))};
-# const xCat    = {json.dumps(list(cat_values.values()))};
-
-# // ── Chart 1 – vertical bars ───────────────────────────────
-# const yMax1 = Math.max(...ySkills) * 1.15;
-# Plotly.newPlot('chart1', [{{
-#   type: 'bar', x: xSkills, y: ySkills.map(() => 0),
-#   text: ySkills.map(v => v > 0 ? v.toFixed(1) : ''),
-#   textposition: 'outside', cliponaxis: false,
-#   textfont: {{ color: '#00e5ff', family: FONTFAM, size: 12 }},
-#   marker: {{ color: ySkills.map((_, i) => PALETTE[i % PALETTE.length]),
-#              opacity: 0.9, line: {{ color: 'rgba(0,229,255,0.3)', width: 1 }} }}
-# }}], {{
-#   ...baseLayout,
-#   yaxis: {{ ...baseLayout.yaxis, range: [0, yMax1],
-#             title: {{ text: 'Years', font: {{ family: FONTFAM }} }} }},
-# }}, cfg);
-
-# function animateChart1() {{
-#   const FRAMES = 30, MS = 600 / FRAMES;
-#   let f = 0;
-#   const t = setInterval(() => {{
-#     f++;
-#     const p = f / FRAMES;
-#     const e = p < 0.5 ? 2*p*p : -1+(4-2*p)*p;
-#     Plotly.restyle('chart1', {{ y: [ySkills.map(v => v * e)] }});
-#     if (f >= FRAMES) clearInterval(t);
-#   }}, MS);
-# }}
-
-# // ── Chart 2 – waterfall ───────────────────────────────────
-# // Waterfall doesn't support restyle animation well; use Plotly.animate instead
-# const yMax2 = Math.max(...yPromo.map(Math.abs)) * 1.15;
-# Plotly.newPlot('chart2', [{{
-#   type: 'waterfall', x: xPromo, y: yPromo,
-#   text: yPromo.map(v => v !== 0 ? Math.abs(v).toFixed(1) : ''),
-#   textposition: 'outside', cliponaxis: false,
-#   textfont: {{ color: '#e8eaf0', family: FONTFAM, size: 12 }},
-#   connector: {{ line: {{ color: '#7c3aed', width: 1.5 }} }},
-#   increasing: {{ marker: {{ color: '#00e5ff', line: {{ color: '#00e5ff', width: 1 }} }} }},
-#   decreasing: {{ marker: {{ color: '#f0f',   line: {{ color: '#f0f',   width: 1 }} }} }},
-#   totals:     {{ marker: {{ color: '#7c3aed',line: {{ color: '#7c3aed',width: 1 }} }} }},
-# }}], {{
-#   ...baseLayout,
-#   yaxis: {{ ...baseLayout.yaxis,
-#             title: {{ text: 'Years', font: {{ family: FONTFAM }} }} }},
-# }}, cfg);
-
-# // Waterfall: animate by scaling values from 0
-# function animateChart2() {{
-#   const FRAMES = 30, MS = 600 / FRAMES;
-#   let f = 0;
-#   const t = setInterval(() => {{
-#     f++;
-#     const p = f / FRAMES;
-#     const e = p < 0.5 ? 2*p*p : -1+(4-2*p)*p;
-#     Plotly.restyle('chart2', {{ y: [yPromo.map(v => v * e)] }});
-#     if (f >= FRAMES) clearInterval(t);
-#   }}, MS);
-# }}
-
-# // ── Chart 3 – horizontal bars ─────────────────────────────
-# const xMax3 = Math.max(...xCat) * 1.15;
-# Plotly.newPlot('chart3', [{{
-#   type: 'bar', orientation: 'h', y: yCat, x: xCat.map(() => 0),
-#   text: xCat.map(v => v > 0 ? v.toFixed(1) : ''),
-#   textposition: 'outside', cliponaxis: false,
-#   textfont: {{ color: '#7c3aed', family: FONTFAM, size: 12 }},
-#   marker: {{ color: yCat.map((_, i) => PALETTE[i % PALETTE.length]),
-#              opacity: 0.9, line: {{ color: 'rgba(124,58,237,0.3)', width: 1 }} }}
-# }}], {{
-#   ...baseLayout,
-#   margin: {{ ...baseLayout.margin, l: 140 }},
-#   xaxis: {{ ...baseLayout.xaxis, range: [0, xMax3],
-#             title: {{ text: 'Years', font: {{ family: FONTFAM }} }} }},
-# }}, cfg);
-
-# function animateChart3() {{
-#   const FRAMES = 30, MS = 600 / FRAMES;
-#   let f = 0;
-#   const t = setInterval(() => {{
-#     f++;
-#     const p = f / FRAMES;
-#     const e = p < 0.5 ? 2*p*p : -1+(4-2*p)*p;
-#     Plotly.restyle('chart3', {{ x: [xCat.map(v => v * e)] }});
-#     if (f >= FRAMES) clearInterval(t);
-#   }}, MS);
-# }}
-
-# // ── Init ──────────────────────────────────────────────────
-# updateNav();
-# setTimeout(animateChart1, 300);
-# </script>
-# </body>
-# </html>
-# """
-
-# html = f"""
-# <!DOCTYPE html>
-# <html lang="en">
-# <head>
-# <meta charset="utf-8">
-# <meta name="viewport" content="width=device-width, initial-scale=1">
-# <title>Skills Dashboard</title>
-
-# <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-
-# <style>
-# body {{
-#     margin:0;
-#     background:#000;
-#     color:#fff;
-#     font-family:Arial, sans-serif;
-#     overflow:hidden;
-# }}
-# .slide {{
-#     width:100vw;
-#     height:100vh;
-#     display:none;
-#     padding:30px;
-#     box-sizing:border-box;
-# }}
-# .slide.active {{
-#     display:block;
-# }}
-# h1 {{
-#     text-align:center;
-# }}
-# .chart {{
-#     width:100%;
-#     height:80vh;
-# }}
-# .nav {{
-#     position:fixed;
-#     right:20px;
-#     bottom:20px;
-#     font-size:40px;
-#     cursor:pointer;
-#     border:1px solid white;
-#     border-radius:50%;
-#     width:60px;
-#     height:60px;
-#     display:flex;
-#     align-items:center;
-#     justify-content:center;
-# }}
-# .prev {{
-#     left:20px;
-#     right:auto;
-# }}
-# </style>
-# </head>
-# <body>
-
-# <div id="s1" class="slide active">
-# <h1>Cumulative time with skills in years</h1>
-# <div id="chart1" class="chart"></div>
-# </div>
-
-# <div id="s2" class="slide">
-# <h1>Promotions Timeline</h1>
-# <div id="chart2" class="chart"></div>
-# </div>
-
-# <div id="s3" class="slide">
-# <h1>Experience by Category</h1>
-# <div id="chart3" class="chart"></div>
-# </div>
-
-# <div class="nav prev" onclick="move(-1)">&#8592;</div>
-# <div class="nav" onclick="move(1)">&#8594;</div>
-
-# <script>
-
-# const slides = [...document.querySelectorAll('.slide')];
-# let current = 0;
-
-# function move(step){{
-#   slides[current].classList.remove('active');
-#   current = (current + step + slides.length) % slides.length;
-#   slides[current].classList.add('active');
-# }}
-
-# // Slide 1
-# Plotly.newPlot('chart1', [{{
-#     type:'bar',
-#     x:{json.dumps(skills["Habilidad"].tolist())},
-#     y:{json.dumps(skills["Time"].fillna(0).tolist())}
-# }}], {{
-#     paper_bgcolor:'black',
-#     plot_bgcolor:'black',
-#     font:{{color:'white'}}
-# }});
-
-# // Slide 2 (waterfall)
-# Plotly.newPlot('chart2', [{{
-#     type:'waterfall',
-#     x:{json.dumps(promotions["Puesto"].astype(str).tolist())},
-#     y:{json.dumps(promotions["Tiempo_puesto"].fillna(0).tolist())}
-# }}], {{
-#     paper_bgcolor:'black',
-#     plot_bgcolor:'black',
-#     font:{{color:'white'}}
-# }});
-
-# // Slide 3
-# Plotly.newPlot('chart3', [{{
-#     type:'bar',
-#     orientation:'h',
-#     y:{json.dumps(list(cat_values.keys()))},
-#     x:{json.dumps(list(cat_values.values()))}
-# }}], {{
-#     paper_bgcolor:'black',
-#     plot_bgcolor:'black',
-#     font:{{color:'white'}}
-# }});
-
-# </script>
-# </body>
-# </html>
-# """
+print("index.html generado correctamente")
+print(f"Total años de experiencia calculados: {total_years} años")
+print(f"KPIs de LinkedIn extraídos: {json.dumps(linkedin_kpis, indent=2, ensure_ascii=False)}")

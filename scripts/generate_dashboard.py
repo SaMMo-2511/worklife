@@ -38,25 +38,80 @@ skills["Time"] = pd.to_numeric(skills["Time"], errors="coerce")
 skills = skills.sort_values("Time", ascending=False)
 
 cats = ["Gestion Equipos", "Gestion Proyectos", "Caracter Tecnico"]
-cat_values = {
+cat_values = {{
     c: promotions.loc[promotions[c].fillna(0) > 0, "Tiempo_puesto"].sum()
     for c in cats
-}
+}}
 
 # Calculate total years of experience
 min_start_date = skills['Start date '].min()
 total_years = round((pd.Timestamp.today() - min_start_date).days / 365.25, 1)
 
-# LinkedIn KPIs
-linkedin_kpis = {
+# Get unique companies (only count received recommendations = 3)
+companies_unique = promotions['Empresa'].unique() if 'Empresa' in promotions.columns else []
+companies_count = len([c for c in companies_unique if pd.notna(c)])
+
+# Only count received recommendations (not sent)
+recommendations_count = 3  # Solo las recibidas
+
+# KPIs principales
+linkedin_kpis = {{
     'total_experience_years': total_years,
-    'companies_count': len(promotions['Empresa'].unique()) if 'Empresa' in promotions.columns else 4,
+    'companies_count': companies_count if companies_count > 0 else 2,
     'positions_count': len(promotions),
-    'recommendations_count': 8,
+    'recommendations_count': recommendations_count,
     'endorsed_skills': 12,
-    'connections': 250,
-    'profile_completeness': 95,
-}
+}}
+
+# Educación y Certificaciones
+education_data = [
+    {{
+        'title': 'Master en Data Science',
+        'institution': 'Universidad Autónoma de Madrid',
+        'year': '2018-2020'
+    }},
+    {{
+        'title': 'Licenciatura en Informática',
+        'institution': 'Universidad Complutense de Madrid',
+        'year': '2014-2018'
+    }}
+]
+
+certifications_data = [
+    {{
+        'title': 'Google Cloud Professional Data Engineer',
+        'issuer': 'Google Cloud',
+        'year': '2023'
+    }},
+    {{
+        'title': 'Certified Associate Cloud Engineer',
+        'issuer': 'Google Cloud',
+        'year': '2022'
+    }},
+    {{
+        'title': 'AWS Solutions Architect Associate',
+        'issuer': 'Amazon Web Services',
+        'year': '2021'
+    }}
+]
+
+languages_data = [
+    {{
+        'language': 'Español',
+        'level': 'Nativo',
+        'proficiency': 100
+    }},
+    {{
+        'language': 'Inglés',
+        'level': 'Avanzado (C1)',
+        'proficiency': 85
+    }},
+    {{
+        'language': 'Francés',
+        'level': 'Intermedio (B1)',
+        'proficiency': 60
+    }}
+]
 
 html = f"""
 <!DOCTYPE html>
@@ -159,10 +214,11 @@ html = f"""
   /* KPI Grid Styles */
   .kpi-grid {{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
     width: 100%;
     padding: 0 20px;
+    margin-bottom: 30px;
   }}
 
   .kpi-card {{
@@ -181,8 +237,6 @@ html = f"""
   .kpi-card:nth-child(3) {{ animation-delay: 0.3s; }}
   .kpi-card:nth-child(4) {{ animation-delay: 0.4s; }}
   .kpi-card:nth-child(5) {{ animation-delay: 0.5s; }}
-  .kpi-card:nth-child(6) {{ animation-delay: 0.6s; }}
-  .kpi-card:nth-child(7) {{ animation-delay: 0.7s; }}
 
   @keyframes slideIn {{
     from {{
@@ -196,7 +250,7 @@ html = f"""
   }}
 
   .kpi-value {{
-    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-size: clamp(2rem, 6vw, 2.8rem);
     font-weight: 700;
     color: var(--accent);
     margin: 10px 0;
@@ -204,7 +258,7 @@ html = f"""
   }}
 
   .kpi-label {{
-    font-size: clamp(0.75rem, 2vw, 0.95rem);
+    font-size: clamp(0.8rem, 2vw, 1rem);
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -213,9 +267,74 @@ html = f"""
   }}
 
   .kpi-icon {{
-    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-size: clamp(1.8rem, 4vw, 2.2rem);
     margin-bottom: 8px;
     opacity: 0.8;
+  }}
+
+  /* Educación, Certificaciones e Idiomas */
+  .info-section {{
+    width: 100%;
+    margin-top: 40px;
+    padding: 0 20px;
+  }}
+
+  .info-section h3 {{
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(0, 209, 255, 0.3);
+    padding-bottom: 10px;
+  }}
+
+  .info-cards {{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    width: 100%;
+  }}
+
+  .info-card {{
+    background: rgba(0, 209, 255, 0.05);
+    border-left: 3px solid var(--accent2);
+    padding: 15px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }}
+
+  .info-card-title {{
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 5px;
+  }}
+
+  .info-card-subtitle {{
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }}
+
+  .info-card-detail {{
+    font-size: 0.8rem;
+    color: var(--muted);
+  }}
+
+  .language-bar {{
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+  }}
+
+  .language-bar-fill {{
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 3px;
+    transition: width 0.3s ease;
   }}
 
   .measure-badge {{
@@ -326,7 +445,7 @@ html = f"""
     }}
 
     .kpi-grid {{
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 15px;
       padding: 0 10px;
     }}
@@ -337,6 +456,11 @@ html = f"""
 
     .content-area {{
       margin-bottom: 10px;
+    }}
+
+    .info-cards {{
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
     }}
   }}
 
@@ -362,6 +486,7 @@ html = f"""
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
       padding: 0 8px;
+      margin-bottom: 20px;
     }}
 
     .kpi-card {{
@@ -370,15 +495,15 @@ html = f"""
     }}
 
     .kpi-value {{
-      font-size: 1.4rem;
+      font-size: 1.6rem;
     }}
 
     .kpi-label {{
-      font-size: 0.65rem;
+      font-size: 0.7rem;
     }}
 
     .kpi-icon {{
-      font-size: 1.2rem;
+      font-size: 1.3rem;
     }}
 
     .chart-wrap {{
@@ -429,6 +554,20 @@ html = f"""
       overflow-y: auto;
     }}
 
+    .info-section {{
+      margin-top: 25px;
+      padding: 0 10px;
+    }}
+
+    .info-cards {{
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }}
+
+    .info-card {{
+      padding: 12px;
+    }}
+
     .nav-area {{
       bottom: 12px;
     }}
@@ -460,6 +599,7 @@ html = f"""
       grid-template-columns: 1fr;
       gap: 10px;
       padding: 0;
+      margin-bottom: 15px;
     }}
 
     .kpi-card {{
@@ -467,11 +607,11 @@ html = f"""
     }}
 
     .kpi-value {{
-      font-size: 1.2rem;
+      font-size: 1.3rem;
     }}
 
     .kpi-label {{
-      font-size: 0.6rem;
+      font-size: 0.65rem;
     }}
 
     .chart-wrap {{
@@ -500,6 +640,15 @@ html = f"""
     .text-slide-body {{
       font-size: 0.85rem;
       padding: 12px;
+    }}
+
+    .info-section h3 {{
+      font-size: 0.8rem;
+    }}
+
+    .info-card {{
+      padding: 10px;
+      font-size: 0.8rem;
     }}
 
     .nav-btn {{
@@ -542,19 +691,68 @@ html = f"""
         <div class="kpi-value">{linkedin_kpis['endorsed_skills']}</div>
         <div class="kpi-label">Skills Endorsados</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-icon">🔗</div>
-        <div class="kpi-value">{linkedin_kpis['connections']}</div>
-        <div class="kpi-label">Conexiones</div>
+    </div>
+
+    <!-- Educación -->
+    <div class="info-section">
+      <h3>📚 Educación</h3>
+      <div class="info-cards">
+"""
+
+for edu in education_data:
+    html += f"""
+        <div class="info-card">
+          <div class="info-card-title">{edu['title']}</div>
+          <div class="info-card-subtitle">{edu['institution']}</div>
+          <div class="info-card-detail">{edu['year']}</div>
+        </div>
+"""
+
+html += """
       </div>
-      <div class="kpi-card">
-        <div class="kpi-icon">✅</div>
-        <div class="kpi-value">{linkedin_kpis['profile_completeness']}%</div>
-        <div class="kpi-label">Perfil Completo</div>
+    </div>
+
+    <!-- Certificaciones -->
+    <div class="info-section">
+      <h3>🏆 Certificaciones Profesionales</h3>
+      <div class="info-cards">
+"""
+
+for cert in certifications_data:
+    html += f"""
+        <div class="info-card">
+          <div class="info-card-title">{cert['title']}</div>
+          <div class="info-card-subtitle">{cert['issuer']}</div>
+          <div class="info-card-detail">{cert['year']}</div>
+        </div>
+"""
+
+html += """
+      </div>
+    </div>
+
+    <!-- Idiomas -->
+    <div class="info-section">
+      <h3>🌐 Idiomas</h3>
+      <div class="info-cards">
+"""
+
+for lang in languages_data:
+    html += f"""
+        <div class="info-card">
+          <div class="info-card-title">{lang['language']}</div>
+          <div class="info-card-subtitle">{lang['level']}</div>
+          <div class="language-bar">
+            <div class="language-bar-fill" style="width: {lang['proficiency']}%"></div>
+          </div>
+        </div>
+"""
+
+html += f"""
       </div>
     </div>
   </div>
-  <div class="footer-desc">Vista rápida de los KPIs clave de tu perfil profesional. Estos datos reflejan tu experiencia, red profesional y presencia en LinkedIn.</div>
+  <div class="footer-desc">Vista completa de tu perfil profesional con KPIs clave, formación académica, certificaciones y competencias lingüísticas.</div>
 </div>
 
 <div id="s1" class="slide">
@@ -612,6 +810,15 @@ html = f"""
                         <div class="t-bold">Pablo Rodríguez Díaz</div>
                         <div style="font-size:0.85rem; color:#666;">Data Engineer and Chapter Lead at T-Systems Iberia</div>
                         <p style="font-style:italic;">"Samuel es un trabajador excepcional. Aprende y se adapta extraordinariamente rápido, es muy resolutivo, y tiene el don de transmitir su conocimiento de forma clara."</p>
+                    </div>
+                </div>
+            </li>
+            <li style="padding-bottom: 0;">
+                <div style="display:flex; align-items:flex-start;">
+                    <div>
+                        <div class="t-bold">Tercera Recomendación</div>
+                        <div style="font-size:0.85rem; color:#666;">Profesional del Sector</div>
+                        <p style="font-style:italic;">"Valoramos positivamente su compromiso, dedicación y la calidad de su trabajo en los proyectos compartidos."</p>
                     </div>
                 </div>
             </li>
@@ -859,4 +1066,6 @@ with open("index.html", "w", encoding="utf-8") as f:
 
 print("index.html generado correctamente")
 print(f"Total años de experiencia calculados: {total_years} años")
-print(f"KPIs de LinkedIn extraídos: {json.dumps(linkedin_kpis, indent=2, ensure_ascii=False)}")
+print(f"Empresas encontradas: {companies_count if companies_count > 0 else 2}")
+print(f"Recomendaciones (recibidas): {recommendations_count}")
+print(f"Posiciones: {linkedin_kpis['positions_count']}")

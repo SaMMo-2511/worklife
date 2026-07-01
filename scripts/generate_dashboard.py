@@ -17,7 +17,6 @@ mask = skills['End Date'] == pd.Timestamp('2026-06-11')
 
 skills.loc[mask, 'End Date'] = pd.Timestamp.today().normalize()
 
-# skills['End Date'] = np.where(skills['End Date']=='11/06/2026',datetime.today().strftime('%d-%m-%Y'),skills['End Date'])
 skills['Start date '] = pd.to_datetime(skills['Start date '])
 skills['End Date'] = pd.to_datetime(skills['End Date'])
 skills['Time'] = (skills['End Date']-skills['Start date ']).dt.days/365
@@ -29,7 +28,6 @@ mask = promotions['End Date'] == pd.Timestamp('2026-06-11')
 
 promotions.loc[mask, 'End Date'] = pd.Timestamp.today().normalize()
 
-# promotions['Termine'] = np.where(promotions['Termine']=='11/06/2026',datetime.today().strftime('%d-%m-%Y'),promotions['End Date'])
 promotions['Empece '] = pd.to_datetime(promotions['Empece '])
 promotions['Termine'] = pd.to_datetime(promotions['Termine'])
 promotions['Tiempo_puesto'] = (promotions['Termine']-promotions['Empece ']).dt.days/30
@@ -49,14 +47,14 @@ cat_values = {
 min_start_date = skills['Start date '].min()
 total_years = round((pd.Timestamp.today() - min_start_date).days / 365.25, 1)
 
-# LinkedIn KPIs (estos valores se pueden actualizar manualmente o mediante API)
+# LinkedIn KPIs
 linkedin_kpis = {
     'total_experience_years': total_years,
     'companies_count': len(promotions['Empresa'].unique()) if 'Empresa' in promotions.columns else 4,
     'positions_count': len(promotions),
-    'recommendations_count': 8,  # Actualizar según datos reales
-    'endorsed_skills': 12,  # Actualizar según datos reales
-    'connections': 250,  # Actualizar según datos reales
+    'recommendations_count': 8,
+    'endorsed_skills': 12,
+    'connections': 250,
     'profile_completeness': 95,
 }
 
@@ -128,7 +126,7 @@ html = f"""
     padding-bottom: 10px;
   }}
 
-  .chart-wrap {{
+  .content-area {{
     width: 100%;
     max-width: 1100px;
     flex: 1;
@@ -137,7 +135,19 @@ html = f"""
     align-items: center;
     justify-content: center;
     position: relative;
-    margin-bottom: 120px;
+    margin-bottom: 20px;
+    overflow-y: auto;
+    padding-bottom: 20px;
+  }}
+
+  .chart-wrap {{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
     min-height: 350px;
   }}
 
@@ -152,7 +162,6 @@ html = f"""
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     width: 100%;
-    max-width: 1100px;
     padding: 0 20px;
   }}
 
@@ -225,8 +234,6 @@ html = f"""
   }}
 
   .footer-desc {{
-    position: absolute;
-    bottom: 60px;
     width: calc(100% - 40px);
     max-width: 1100px;
     background: var(--card-bg);
@@ -237,6 +244,7 @@ html = f"""
     line-height: 1.6;
     border-radius: 0 4px 4px 0;
     backdrop-filter: blur(5px);
+    margin-top: auto;
   }}
 
   .linkedin-container {{
@@ -249,13 +257,13 @@ html = f"""
     overflow-y: auto;
     max-height: 50vh;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    margin-top: 20px;
   }}
+  
   .linkedin-container ul {{ list-style: none; }}
   .linkedin-container .t-bold {{ font-weight: 700; color: #000; }}
   .linkedin-container .EntityPhoto-circle-3 {{ border-radius: 50%; object-fit: cover; }}
-  .linkedin-container img {{ margin-right: 15px; }}
-  .linkedin-container p {{ color: #333; line-height: 1.5; }}
+  .linkedin-container img {{ margin-right: 15px; width: 48px; height: 48px; }}
+  .linkedin-container p {{ color: #333; line-height: 1.5; margin: 5px 0; }}
 
   .text-slide-body {{
     max-width: 800px;
@@ -266,7 +274,7 @@ html = f"""
     padding: 40px;
     background: var(--card-bg);
     border-radius: 8px;
-    margin-top: 20px;
+    text-align: justify;
   }}
 
   .nav-area {{
@@ -327,22 +335,27 @@ html = f"""
       padding: 15px;
     }}
 
-    .chart-wrap {{
-      min-height: 300px;
-      margin-bottom: 100px;
+    .content-area {{
+      margin-bottom: 10px;
     }}
   }}
 
   @media (max-width: 768px) {{
     .slide {{
       padding: 15px 10px 180px;
-      justify-content: center;
+      justify-content: flex-start;
     }}
 
     h1 {{
       font-size: 0.95rem;
       letter-spacing: 0.06em;
       margin-bottom: 15px;
+    }}
+
+    .content-area {{
+      min-height: auto;
+      margin-bottom: 10px;
+      overflow-y: visible;
     }}
 
     .kpi-grid {{
@@ -370,7 +383,6 @@ html = f"""
 
     .chart-wrap {{
       min-height: 250px;
-      margin-bottom: 120px;
       width: 100%;
       padding: 0 10px;
       box-sizing: border-box;
@@ -385,10 +397,10 @@ html = f"""
       width: calc(100% - 20px);
       font-size: 0.75rem;
       padding: 10px;
-      bottom: 60px;
       line-height: 1.3;
       margin-left: auto;
       margin-right: auto;
+      margin-top: 10px;
     }}
 
     .measure-badge {{
@@ -407,6 +419,7 @@ html = f"""
     .linkedin-container img {{
       width: 40px !important;
       height: 40px !important;
+      margin-right: 10px;
     }}
 
     .text-slide-body {{
@@ -463,7 +476,6 @@ html = f"""
 
     .chart-wrap {{
       min-height: 220px;
-      margin-bottom: 100px;
     }}
 
     .chart {{
@@ -473,7 +485,6 @@ html = f"""
     .footer-desc {{
       font-size: 0.7rem;
       padding: 8px;
-      bottom: 55px;
     }}
 
     .measure-badge {{
@@ -504,7 +515,7 @@ html = f"""
 <!-- KPI Dashboard Slide -->
 <div id="s0" class="slide active">
   <h1>Resumen Profesional</h1>
-  <div class="chart-wrap">
+  <div class="content-area">
     <div class="kpi-grid">
       <div class="kpi-card">
         <div class="kpi-icon">⏱️</div>
@@ -548,57 +559,59 @@ html = f"""
 
 <div id="s1" class="slide">
   <h1>Dominio Técnico</h1>
-  <div class="chart-wrap">
+  <div class="content-area">
     <div class="measure-badge">Medida: Tiempo en Años</div>
-    <div id="chart1" class="chart"></div>
+    <div class="chart-wrap">
+      <div id="chart1" class="chart"></div>
+    </div>
   </div>
   <div class="footer-desc">Tiempo de trabajo dedicado a cada una de las herramientas y habilidades necesarias para un analista de datos. Solo se muestran el TOP respecto al tiempo dedicado.</div>
 </div>
 
 <div id="s2" class="slide">
   <h1>Evolución de Carrera</h1>
-  <div class="chart-wrap">
+  <div class="content-area">
     <div class="measure-badge">Medida: Tiempo en Meses</div>
-    <div id="chart2" class="chart"></div>
+    <div class="chart-wrap">
+      <div id="chart2" class="chart"></div>
+    </div>
   </div>
-  <div class="footer-desc">Cronología de promociones y responsabilidades. Durante mi vida laboral las promociones han sido continuas, frecuentes y en tiempos cortos debido a la confianza de mis [...]
-  </div>
+  <div class="footer-desc">Cronología de promociones y responsabilidades. Durante mi vida laboral las promociones han sido continuas, frecuentes y en tiempos cortos debido a la confianza de mis superiores.</div>
 </div>
 
 <div id="s3" class="slide">
   <h1>Especialización por Proyectos</h1>
-  <div class="chart-wrap">
+  <div class="content-area">
     <div class="measure-badge">Medida: Tiempo en Meses</div>
-    <div id="chart3" class="chart"></div>
+    <div class="chart-wrap">
+      <div id="chart3" class="chart"></div>
+    </div>
   </div>
-  <div class="footer-desc">En mi vida laboral he estado en proyectos que permitian la gestion de personas, proyectos donde gestionaba a cliente y proyectos donde el foco era la habilidad técnica[...]
-  </div>
+  <div class="footer-desc">En mi vida laboral he estado en proyectos que permitían la gestión de personas, proyectos donde gestionaba a cliente y proyectos donde el foco era la habilidad técnica.</div>
 </div>
 
 <div id="s-li" class="slide">
   <h1>Recomendaciones de mi Red</h1>
-  <div class="chart-wrap">
+  <div class="content-area">
     <div class="linkedin-container">
-        <ul class="mqxZYhUgxJzWocAgTaRZgscFyxcVymDOeKAOU">
-            <li class="artdeco-list__item" style="border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
-                <div style="display:flex; align-items:start;">
-                    <img width="48" height="48" src="https://media.licdn.com/dms/image/v2/C4D03AQGXwPrMzj3--g/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/16397375837[...]
+        <ul>
+            <li style="border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
+                <div style="display:flex; align-items:flex-start;">
+                    <img src="https://media.licdn.com/dms/image/v2/C4D03AQGXwPrMzj3--g/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1639737583/" alt="Manuel">
                     <div>
                         <div class="t-bold">Manuel Moreno Martin</div>
-                        <div style="font-size:0.85rem; color:#666; margin-bottom: 8px;">Data Scientist at T-Systems Iberia</div>
-                        <p style="font-style:italic;">"Espectacular como compañero y persona. Se puede destacar su brillantez y su gran capacidad en la resolución de problemas, adaptándose a l[...]
-                        </p>
+                        <div style="font-size:0.85rem; color:#666;">Data Scientist at T-Systems Iberia</div>
+                        <p style="font-style:italic;">"Espectacular como compañero y persona. Se puede destacar su brillantez y su gran capacidad en la resolución de problemas, adaptándose a los cambios tecnológicos con facilidad."</p>
                     </div>
                 </div>
             </li>
-            <li class="artdeco-list__item">
-                <div style="display:flex; align-items:start;">
-                    <img width="48" height="48" src="https://media.licdn.com/dms/image/v2/D4D03AQHBr7WVQWzCDA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/17206929418[...]
+            <li style="border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
+                <div style="display:flex; align-items:flex-start;">
+                    <img src="https://media.licdn.com/dms/image/v2/D4D03AQHBr7WVQWzCDA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1720692941/" alt="Pablo">
                     <div>
                         <div class="t-bold">Pablo Rodríguez Díaz</div>
-                        <div style="font-size:0.85rem; color:#666; margin-bottom: 8px;">Data Engineer and Chapter Lead at T-Systems Iberia</div>
-                        <p style="font-style:italic;">"Samuel es un trabajador excepcional. Aprende y se adapta extraordinariamente rápido, es muy resolutivo, y tiene el don de transmitir su con[...]
-                        </p>
+                        <div style="font-size:0.85rem; color:#666;">Data Engineer and Chapter Lead at T-Systems Iberia</div>
+                        <p style="font-style:italic;">"Samuel es un trabajador excepcional. Aprende y se adapta extraordinariamente rápido, es muy resolutivo, y tiene el don de transmitir su conocimiento de forma clara."</p>
                     </div>
                 </div>
             </li>
@@ -610,25 +623,21 @@ html = f"""
 
 <div id="s4" class="slide">
   <h1>Visión Analítica</h1>
-  <div class="chart-wrap">
+  <div class="content-area">
     <div class="text-slide-body">
-    <p>La historia que acabas de ver resume mi camino como analista de datos y de negocio.
-    En esencia, mi trabajo consiste en eso: convertir datos en información de valor.</p>
+    <p><strong>La historia que acabas de ver resume mi camino como analista de datos y de negocio.</strong></p>
+    <p>En esencia, mi trabajo consiste en eso: convertir datos en información de valor.</p>
     <br>
-    <p>Crear un análisis basado en LinkedIn ha sido un desafío ideal para mostrar en detalle la metodología que precisa un analista de datos: ¿Cómo medir el talento y la experiencia de forma[...]
-    </p><br>
-    
-    <p>
-        Cada una de las pestañas anteriores ha sido diseñada pensando en resolver estas dudas desde la perspectiva más importante: la de usted, el cliente final. </p>
+    <p>Crear un análisis basado en LinkedIn ha sido un desafío ideal para mostrar en detalle la metodología que precisa un analista de datos: ¿Cómo medir el talento y la experiencia de forma cuantitativa? ¿Cuál es el valor intrínseco de una persona más allá de sus números?</p>
+    <br>
+    <p>Cada una de las pestañas anteriores ha sido diseñada pensando en resolver estas dudas desde la perspectiva más importante: la de usted, el cliente final.</p>
+    <br>
+    <p style="margin-top: 30px; text-align: center;"><i>Powered by PrometheusBird</i></p>
+    <p style="margin-top: 20px; text-align: center;">
+      <strong>Autor: Samuel Moreno Moya</strong><br>
+      <a href="https://www.linkedin.com/in/samuel-moreno-moya-5a0a86210/" style="color: var(--accent); text-decoration: none;">LinkedIn</a>
+    </p>
     </div>
-    <br><br><br>
-    <div class="footer"><i>Powered by PrometheusBird</i></div>
-    <footer>
-        <br>
-  <p>Autor: Samuel Moreno Moya<br>
-  <center><a href="https://www.linkedin.com/in/samuel-moreno-moya-5a0a86210/">LinkedIn</a></center> 
-  </p>
-</footer>
   </div>
 </div>
 
